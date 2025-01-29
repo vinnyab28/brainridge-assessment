@@ -7,7 +7,8 @@
         <div class="form-row d-flex flex-column gap-3 mb-3">
             <div class="w-100">
                 <label for="accountType" class="form-label d-block required fw-bold">From Account</label>
-                <select formControlName="fromAccount" class="form-select" aria-label="Default select example">
+                <select formControlName="fromAccount" class="form-select" aria-label="Default select example"
+                    [ngClass]="transferForm.controls['fromAccount'].dirty ? (transferForm.controls['fromAccount'].invalid ? 'is-invalid' : 'is-valid') : ''">
                     <option selected>Open this select menu</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
@@ -16,7 +17,8 @@
             </div>
             <div class="w-100">
                 <label for="accountType" class="form-label d-block required fw-bold">To Account</label>
-                <select formControlName="toAccount" class="form-select" aria-label="Default select example">
+                <select formControlName="toAccount" class="form-select" aria-label="Default select example"
+                    [ngClass]="transferForm.controls['toAccount'].dirty ? (transferForm.controls['toAccount'].invalid ? 'is-invalid' : 'is-valid') : ''">
                     <option selected>Open this select menu</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
@@ -26,13 +28,27 @@
             <div class="w-100">
                 <label for="amount" class="form-label required fw-bold">Amount</label>
                 <input type="number" formControlName="amount" class="form-control" id="amount"
-                    placeholder="Enter Amount" required min="0" max="5000">
+                    [ngClass]="transferForm.controls['amount'].dirty ? (transferForm.controls['amount'].invalid ? 'is-invalid' : 'is-valid') : ''"
+                    placeholder="Enter Amount" required min="1" max="5000">
+                @if(transferForm.controls['amount'].hasError('required')) {
+                <div class="invalid-feedback">Amount cannot be empty</div>
+                }
+                @if(transferForm.controls['amount'].hasError('min')) {
+                <div class="invalid-feedback">Amount should be greater than 0</div>
+                }
+                @if(transferForm.controls['amount'].hasError('max')) {
+                <div class="invalid-feedback">Amount cannot be greater than 5000</div>
+                }
             </div>
             <div class="form-check mt-3">
-                <input class="form-check-input" type="checkbox" formControlName="confirmation" id="flexCheckDefault">
+                <input class="form-check-input" type="checkbox" formControlName="confirmation" id="flexCheckDefault"
+                    [ngClass]="isSubmitted ? (transferForm.controls['confirmation'].invalid ? 'is-invalid' : 'is-valid') : ''">
                 <label class="form-check-label required" for="flexCheckDefault">
                     Confirm this transfer
                 </label>
+                @if(transferForm.controls['confirmation'].hasError('requiredTrue')) {
+                <div class="invalid-feedback">Please check this box to continue</div>
+                }
             </div>
         </div>
     </div>

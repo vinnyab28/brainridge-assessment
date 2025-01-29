@@ -14,6 +14,11 @@
       </tr>
     </thead>
     <tbody>
+      @if(!userData.length){
+      <tr class="py-5 text-center">
+        <td colspan="5" class="py-5">No user data available</td>
+      </tr>
+      }
       @for(user of userData; track user.id; let i = $index) {
       <tr>
         <td>{{ user.id }}</td>
