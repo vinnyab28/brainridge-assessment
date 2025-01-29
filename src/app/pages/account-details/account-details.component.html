@@ -1,0 +1,32 @@
+<div ngbAccordion>
+    <div ngbAccordionItem ngbAccordionItem="first" #first="ngbAccordionItem" [collapsed]="true">
+        <h2 ngbAccordionHeader>
+            <div ngbAccordionHeader class="accordion-button custom-header gap-4 justify-content-between">
+                <p class="m-0">SAVINGS</p>
+                <span class="fw-bold">{{213.21 | currency}}</span>
+                <button ngbAccordionToggle class="btn btn-link p-0 ms-auto"><i class="bi"
+                        [ngClass]="first.collapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i></button>
+            </div>
+        </h2>
+        <div ngbAccordionCollapse>
+            <div ngbAccordionBody>
+                <ng-template>Content for the first item</ng-template>
+            </div>
+        </div>
+    </div>
+    <div ngbAccordionItem ngbAccordionItem="second" #second="ngbAccordionItem" [collapsed]="true">
+        <h2 ngbAccordionHeader>
+            <div ngbAccordionHeader class="accordion-button custom-header gap-4 justify-content-between">
+                <p class="m-0">CHEQUING</p>
+                <span class="fw-bold">{{5213.21 | currency}}</span>
+                <button ngbAccordionToggle class="btn btn-link p-0 ms-auto"><i class="bi"
+                        [ngClass]="second.collapsed ? 'bi-chevron-down' : 'bi-chevron-up'"></i></button>
+            </div>
+        </h2>
+        <div ngbAccordionCollapse>
+            <div ngbAccordionBody>
+                <ng-template>Content for the second item</ng-template>
+            </div>
+        </div>
+    </div>
+</div>

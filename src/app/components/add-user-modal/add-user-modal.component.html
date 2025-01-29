@@ -1,0 +1,47 @@
+<form [formGroup]="userForm" (ngSubmit)="onCreateUser()">
+  <div class="modal-header">
+    <h4 class="mb-0">Add User</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <div class="form-row d-flex gap-4 mb-4">
+      <div class="">
+        <label for="firstName" class="form-label required fw-bold">First Name</label>
+        <input type="text" formControlName="firstName" class="form-control" id="firstName" placeholder="BrainRidge"
+          required minlength="2" maxlength="32" ngbAutofocus>
+      </div>
+      <div class="">
+        <label for="lastName" class="form-label required fw-bold">Last Name</label>
+        <input type="text" formControlName="lastName" class="form-control" id="lastName" placeholder="Consulting"
+          required minlength="2" maxlength="32">
+      </div>
+    </div>
+    <div class="form-row d-flex gap-4 mb-3">
+      <div class="w-100">
+        <label for="accountType" class="form-label d-block required fw-bold">Account Type</label>
+        <div class="btn-group w-100" role="group" aria-label="Basic radio toggle button group">
+          <input type="radio" class="btn-check" name="accountType" formControlName="accountType" id="accountType0"
+            [value]="accountTypes.CHEQUING" autocomplete="off">
+          <label class="btn btn-outline-primary" for="accountType0">Chequing</label>
+
+          <input type="radio" class="btn-check" name="accountType" formControlName="accountType" id="accountType1"
+            [value]="accountTypes.SAVINGS" autocomplete="off">
+          <label class="btn btn-outline-primary" for="accountType1">Savings</label>
+        </div>
+      </div>
+    </div>
+    <div class="form-row d-flex gap-4 mb-3">
+      <div class="w-100">
+        <label for="amount" class="form-label required fw-bold">Amount</label>
+        <input type="number" formControlName="amount" class="form-control" id="amount" placeholder="Enter Amount"
+          required min="0" max="5000">
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer d-flex justify-content-end gap-1">
+    <button type="button" class="btn btn-outline-secondary border-0 px-3" (click)="activeModal.close('Close click')">
+      Cancel
+    </button>
+    <button type="submit" class="btn btn-primary px-5" [disabled]="userForm.invalid">Add</button>
+  </div>
+</form>

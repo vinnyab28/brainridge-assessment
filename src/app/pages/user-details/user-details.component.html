@@ -1,0 +1,20 @@
+<div class="px-3 d-flex gap-3 py-4 align-items-center">
+    <a href="#" [routerLink]="['/dashboard']"><i class="bi bi-chevron-left fs-2 fw-bold"></i></a>
+    <h1>{{user.firstName + " " + user.lastName}}</h1>
+    <button class="btn btn-primary ms-auto" (click)="onOpenTransferFundsModal()">Transfer Funds</button>
+</div>
+<div class="">
+    <ul class="nav nav-tabs">
+        <li class="nav-item flex-fill text-center">
+            <a class="nav-link" [routerLink]="['account-details']" routerLinkActive="active" aria-current="page"
+                href="#">Account Details</a>
+        </li>
+        <li class="nav-item flex-fill text-center">
+            <a class="nav-link" [routerLink]="['transaction-logs']" routerLinkActive="active" href="#">Transaction
+                Logs</a>
+        </li>
+    </ul>
+    <div class="tabs-body">
+        <router-outlet></router-outlet>
+    </div>
+</div>
