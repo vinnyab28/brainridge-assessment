@@ -1,24 +1,34 @@
-<table class="table">
+<div class="d-flex py-4 gap-3 align-items-center">
+    <a href="#" [routerLink]="['/dashboard']"><i class="bi bi-chevron-left fs-2 me-3 fw-bold"></i></a>
+    <h1 class="m-0">Transaction Logs</h1>
+    <h3 class="m-0 fw-bold ms-auto">Current Balance: {{currentUser?.balance | currency}}</h3>
+</div>
+<table class="table table-striped">
     <thead>
         <tr>
+            <th class="text-center">S.No</th>
             <th>Date</th>
-            <th class="text-center">Account Transaction</th>
+            <th>Description</th>
+            <th>From Account</th>
+            <th>To Transaction</th>
             <th class="text-center">Amount Transferred</th>
-            <th class="text-center">Current Amount</th>
+            <!-- <th class="text-center">Current Amount</th> -->
         </tr>
     </thead>
     <tbody>
         @for(log of transactionLogs; track log.transactionId; let i = $index) {
         <tr>
-            <td rowspan="2" class="align-middle">{{log.timestamp | date:'medium'}}</td>
-            <td rowspan="2" class="align-middle text-center">{{log.fromAccountType | titlecase}}<i
-                    class="bi bi-arrow-right-square-fill mx-3"></i>{{log.toAccountType | titlecase}}</td>
-            <td rowspan="2" class="align-middle text-center">{{log.amount | currency}}</td>
-            <td><span class="fw-bold me-1">Savings:</span>{{log.currentSavingsBalance | currency}}</td>
+            <td class="text-center">{{i + 1}}</td>
+            <td>{{log.timestamp | date:'medium'}}</td>
+            <td>{{log.description || 'N/A'}}</td>
+            <td [ngClass]="{'fw-bold': log.from.accountId == currentUser?.accountId}">{{(log.from.firstName + " " +
+                log.from.lastName) | titlecase}}</td>
+            <td [ngClass]="{'fw-bold': log.to.accountId == currentUser?.accountId}">{{(log.to.firstName + " " +
+                log.to.lastName) | titlecase}}</td>
+            <td class="text-center">{{log.amount | currency}}</td>
+            <!-- <td class="text-center">{{currentUser?.balance | currency}}</td> -->
         </tr>
-        <tr>
-            <td><span class="fw-bold me-1">Chequing:</span>{{log.currentChequingBalance | currency}}</td>
-        </tr>
+
         }
     </tbody>
 </table>

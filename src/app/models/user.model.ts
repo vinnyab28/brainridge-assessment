@@ -1,8 +1,9 @@
-import { AccountDetails } from "./account-details.model";
+import { ACCOUNT_TYPE } from "../enums/account-type";
 
 export interface User {
-    userId?: string,
+    accountId?: string,
     firstName: string,
     lastName: string,
-    accountDetails: AccountDetails
+    accountType: ACCOUNT_TYPE,
+    balance: number
 }

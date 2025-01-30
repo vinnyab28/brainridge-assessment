@@ -1,8 +1,7 @@
-import { CurrencyPipe } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AddUserComponent } from '../../components/add-user-modal/add-user-modal.component';
+import { CurrencyPipe, TitleCasePipe } from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { ACCOUNT_TYPE } from '../../enums/account-type';
 import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 
@@ -17,43 +16,34 @@ import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'br-dashboard',
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, RouterLink, TitleCasePipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  userData: User[] = [];
-  private modalService = inject(NgbModal);
+  listOfUsers: User[] = [];
+  accountType = ACCOUNT_TYPE;
+  fetchingUsers: boolean = true;
 
-  constructor(private router: Router, private userSerivce: UserService) {
-  }
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
-    this.getUsers();
+    setTimeout(() => { this.getUsers(); },
+      3000)
   }
 
   getUsers() {
-    this.userSerivce.getUsers().then((snapshot) => {
+    this.userService.getAllUsers().then((snapshot) => {
       if (snapshot.exists()) {
-        this.userData = Object.values<User>(snapshot.val());
+        this.listOfUsers = Object.values<User>(snapshot.val());
       } else {
         console.log("No data available");
       }
+      this.fetchingUsers = false;
     });
   }
 
-  onOpenAddUserModal() {
-    const modalRef = this.modalService.open(AddUserComponent, { centered: true });
-    modalRef.result.then((result) => {
-      if (result) this.getUsers();
-    })
-  }
-
-  onViewUserDetails(userId: string) {
-    this.router.navigate(["user-details", userId])
-  }
-
   ngOnDestroy(): void {
-    this.modalService.dismissAll();
+
   }
 }

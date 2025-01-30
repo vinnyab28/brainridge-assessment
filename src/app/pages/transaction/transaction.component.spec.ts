@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TransferFundsModalComponent } from './transfer-funds-modal.component';
+import { TransferFundsModalComponent } from './transaction.component';
 
 describe('TransferFundsModalComponent', () => {
   let component: TransferFundsModalComponent;
@@ -10,7 +10,7 @@ describe('TransferFundsModalComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TransferFundsModalComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(TransferFundsModalComponent);
     component = fixture.componentInstance;

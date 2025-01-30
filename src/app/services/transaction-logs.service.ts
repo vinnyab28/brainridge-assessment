@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { child, Database, get, ref, set } from '@angular/fire/database';
+import { Database, get, ref, set } from '@angular/fire/database';
 import { COLLECTIONS } from '../enums/collections';
 import { TransactionLog } from '../models/transaction-log.model';
 
@@ -12,9 +12,9 @@ export class TransactionLogsService {
 
   private db: Database = inject(Database);
 
-  insertTransactionLog(userId: string, transactionLog: TransactionLog) {
-    const usersRef = ref(this.db, COLLECTIONS.TRANSACTION_LOGS + "/" + userId);
-    set(child(usersRef, transactionLog.transactionId), transactionLog)
+  insertTransactionLog(transactionLog: TransactionLog) {
+    const usersRef = ref(this.db, COLLECTIONS.TRANSACTION_LOGS + "/" + transactionLog.transactionId);
+    set(usersRef, transactionLog)
       .then(() => {
         console.log('Transaction log saved successfully!');
       })
@@ -23,8 +23,8 @@ export class TransactionLogsService {
       });
   }
 
-  getAllTransactionLogs(userId: string) {
-    const usersRef = ref(this.db, COLLECTIONS.TRANSACTION_LOGS + "/" + userId);
-    return get(usersRef);
+  getAllTransactionLogs() {
+    const transactionLogsRef = ref(this.db, COLLECTIONS.TRANSACTION_LOGS);
+    return get(transactionLogsRef);
   }
 }

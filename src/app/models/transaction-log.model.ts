@@ -1,10 +1,14 @@
 export interface TransactionLog {
     transactionId: string,
     description: string,
-    fromAccountType: string,
-    toAccountType: string,
     amount: number,
     timestamp: string,
-    currentSavingsBalance: number,
-    currentChequingBalance: number
+    from: TransactionAccountInfo,
+    to: TransactionAccountInfo
+}
+
+interface TransactionAccountInfo {
+    accountId: string,
+    firstName?: string,
+    lastName?: string
 }

@@ -12,18 +12,18 @@ export class UserService {
   constructor() {
   }
 
-  getUsers(): Promise<any> {
+  getAllUsers(): Promise<any> {
     const usersRef = ref(this.db, COLLECTIONS.USERS);
     return get(usersRef);
   }
 
-  addUser(userId: string, userData: User) {
-    const usersRef = ref(this.db, COLLECTIONS.USERS + "/" + userId);
+  addUser(accountId: string, userData: User) {
+    const usersRef = ref(this.db, COLLECTIONS.USERS + "/" + accountId);
     return set(usersRef, userData);
   }
 
-  getUser(userId: string) {
-    const usersRef = ref(this.db, `${COLLECTIONS.USERS}/${userId}`);
+  getUser(accountId: string) {
+    const usersRef = ref(this.db, `${COLLECTIONS.USERS}/${accountId}`);
     return get(usersRef);
   }
 }
