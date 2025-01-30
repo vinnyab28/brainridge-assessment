@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { v4 as uuidv4 } from "uuid";
 import { ACCOUNT_TYPE } from '../../enums/account-type';
 import { User } from '../../models/user.model';
 import { AccountService } from '../../services/account.service';
@@ -29,7 +30,8 @@ export class TransferFundsModalComponent implements OnInit {
         fromAccount: new FormControl(null, [Validators.required]),
         toAccount: new FormControl(null, [Validators.required]),
         amount: new FormControl(null, [Validators.required, Validators.min(1)]),
-        confirmation: new FormControl(null, [Validators.required, Validators.requiredTrue])
+        confirmation: new FormControl(null, [Validators.required, Validators.requiredTrue]),
+        description: new FormControl("", [Validators.minLength(0)])
       }, {
       validators: [this.sameAccountSelectedValidator()]
     });
@@ -50,24 +52,39 @@ export class TransferFundsModalComponent implements OnInit {
   }
 
   onTransferFunds() {
+    const formData = this.transferForm.value;
+    const fromAccountType = ACCOUNT_TYPE[formData.fromAccount].toLowerCase();
+    const toAccountType = ACCOUNT_TYPE[formData.toAccount].toLowerCase();
+
     if (this.transferForm.valid) {
       this.isSubmitted = true;
-      const formData = this.transferForm.value;
 
-      const fromAccountType = ACCOUNT_TYPE[formData.fromAccount].toLowerCase();
-      const toAccountType = ACCOUNT_TYPE[formData.toAccount].toLowerCase();
 
       this.accountService.transferFunds({
         userId: this.userData?.userId!,
         amount: formData.amount,
         fromAccountType,
         toAccountType,
-      }).then(() => {
+      }).then((updatedAccountDetails) => {
         console.log('Transfer successful');
-        this.activeModal.close(true)
-      }).catch((error) => {
-        console.error('Transfer failed:', error.message);
-      });
+        this.activeModal.close(true);
+        return updatedAccountDetails.snapshot.val();
+      }).then((updatedAccountDetails) => {
+        const transactionLog = {
+          transactionId: uuidv4(),
+          description: this.transferForm.get('description')?.value,
+          fromAccountType: fromAccountType,
+          toAccountType: toAccountType,
+          amount: this.transferForm.get('amount')?.value,
+          timestamp: new Date().toISOString(),
+          currentSavingsBalance: updatedAccountDetails.accountDetails.savings.balance,
+          currentChequingBalance: updatedAccountDetails.accountDetails.chequing.balance
+        }
+        this.transactionLogsService.insertTransactionLog(this.userId!, transactionLog);
+      })
+        .catch((error) => {
+          console.error('Transfer failed:', error.message);
+        });
     }
   }
 

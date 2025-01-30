@@ -46,6 +46,11 @@
                 <div class="invalid-feedback">Insufficient funds to transfer</div>
                 }
             </div>
+            <div class="w-100">
+                <label for="description" class="form-label fw-bold">Description (Optional)</label>
+                <input type="text" formControlName="description" class="form-control" id="description"
+                    placeholder="Enter description">
+            </div>
             <div class="form-check mt-3">
                 <input class="form-check-input" type="checkbox" formControlName="confirmation" id="flexCheckDefault"
                     [ngClass]="isSubmitted ? (transferForm.controls['confirmation'].invalid ? 'is-invalid' : 'is-valid') : ''">

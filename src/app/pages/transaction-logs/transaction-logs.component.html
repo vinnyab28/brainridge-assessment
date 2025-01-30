@@ -1,4 +1,24 @@
-<ul class="list-group list-group-flush">
-    <li class="list-group-item">An item</li>
-    <li class="list-group-item">A second item</li>
-</ul>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th class="text-center">Account Transaction</th>
+            <th class="text-center">Amount Transferred</th>
+            <th class="text-center">Current Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for(log of transactionLogs; track log.transactionId; let i = $index) {
+        <tr>
+            <td rowspan="2" class="align-middle">{{log.timestamp | date:'medium'}}</td>
+            <td rowspan="2" class="align-middle text-center">{{log.fromAccountType | titlecase}}<i
+                    class="bi bi-arrow-right-square-fill mx-3"></i>{{log.toAccountType | titlecase}}</td>
+            <td rowspan="2" class="align-middle text-center">{{log.amount | currency}}</td>
+            <td><span class="fw-bold me-1">Savings:</span>{{log.currentSavingsBalance | currency}}</td>
+        </tr>
+        <tr>
+            <td><span class="fw-bold me-1">Chequing:</span>{{log.currentChequingBalance | currency}}</td>
+        </tr>
+        }
+    </tbody>
+</table>
