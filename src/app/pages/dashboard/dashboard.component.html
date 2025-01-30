@@ -1,7 +1,15 @@
 <div class="d-flex justify-content-between py-4 gap-3 align-items-center">
-  <h1 class="me-auto">User Details</h1>
-  <button class="btn btn-primary" [routerLink]="['/transaction']">Transfer Funds</button>
+  <h1 class="me-auto">Dashboard</h1>
+  <button class="btn btn-primary" [routerLink]="['/transaction']" [disabled]="!listOfUsers.length">Transfer
+    Funds</button>
   <button class="btn btn-primary" [routerLink]="['/create-account']">Add User</button>
+</div>
+<div class="search-wrapper col-4 ms-auto mb-3">
+  <div class="input-group">
+    <span class="input-group-text"><i class="bi bi-search"></i></span>
+    <input type="text" class="form-control" [(ngModel)]="searchText" (ngModelChange)="onSearch()"
+      placeholder="Search Users" aria-label="Search Users">
+  </div>
 </div>
 <table class="table table-striped">
   <thead>
@@ -14,7 +22,7 @@
       <th class="text-center">Action</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody class="table-group-divider">
     @if (fetchingUsers) {
     <tr class="text-center">
       <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
@@ -57,12 +65,12 @@
       <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
     </tr>
     }
-    @if(!listOfUsers.length && !this.fetchingUsers){
+    @if(!filteredUsers.length && !this.fetchingUsers){
     <tr class="py-5 text-center">
       <td colspan="6" class="py-5">No user data available</td>
     </tr>
     } @else {
-    @for(user of listOfUsers; track user.accountId; let i = $index) {
+    @for(user of filteredUsers; track user.accountId; let i = $index) {
     <tr class="align-middle">
       <td class="text-center">{{i + 1}}</td>
       <td>{{ user.firstName }}</td>

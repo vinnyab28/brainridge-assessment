@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { v4 as uuidv4 } from 'uuid';
 import { ACCOUNT_TYPE } from '../../enums/account-type';
 import { User } from '../../models/user.model';
+import { ToastService } from '../../services/toast.service';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -17,6 +18,8 @@ export class CreateAccountComponent {
   userForm: FormGroup;
   accountTypes = ACCOUNT_TYPE;
   formSubmitted: boolean;
+  toastService: ToastService = inject(ToastService);
+  isCreatingAccount: boolean = false;
 
   constructor(private userService: UserService, private router: Router) {
     this.formSubmitted = false;
@@ -31,19 +34,32 @@ export class CreateAccountComponent {
   onCreateUser() {
     this.formSubmitted = true;
     if (this.userForm.valid) {
-      const accountId = uuidv4();
-
-      let formData: User = {
-        accountId,
-        firstName: this.userForm.value.firstName,
-        lastName: this.userForm.value.lastName,
-        balance: this.userForm.value.balance,
-        accountType: this.userForm.value.accountType
-      }
-
-      this.userService.addUser(accountId, formData);
-      this.router.navigate(["/dashboard"]);
+      this.isCreatingAccount = true;
+      setTimeout(() => this.createUser(), 3000);
     } else {
+      this.toastService.showDangerToast("Invalid form");
     }
+  }
+
+  private createUser() {
+    const accountId = uuidv4();
+    let formData: User = {
+      accountId,
+      firstName: this.userForm.value.firstName,
+      lastName: this.userForm.value.lastName,
+      balance: this.userForm.value.balance,
+      accountType: this.userForm.value.accountType
+    }
+
+    this.userService.addUser(accountId, formData).then(() => {
+      this.isCreatingAccount = false;
+      this.toastService.showSuccessToast("User created successfully!");
+      this.router.navigate(["/dashboard"]);
+    }).catch((error) => {
+      this.toastService.showDangerToast(error.message);
+      this.isCreatingAccount = false;
+    }).finally(() => {
+      this.isCreatingAccount = false;
+    });
   }
 }

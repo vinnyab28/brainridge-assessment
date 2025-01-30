@@ -4,6 +4,12 @@
 @import "bootstrap/scss/bootstrap";
 @import "bootstrap-icons/font/bootstrap-icons";
 
+html,
+body {
+  height: 100%;
+  min-height: 100%;
+}
+
 label.required::after {
   content: "*";
   color: red;

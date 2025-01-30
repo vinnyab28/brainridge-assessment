@@ -6,6 +6,16 @@
     </div>
   </main>
 </div>
+@if((toastService.toast$ | async)?.visible) {
+<div class="toast-container rounded position-fixed bottom-0 end-0 m-3 p-3 z-99"
+  [ngClass]="[(toastService.toast$ | async)?.style]" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+      {{(toastService.toast$ | async)?.message}}
+    </div>
+  </div>
+</div>
+}
 <ngb-toast header="Notification header">
   Content of the notification
 </ngb-toast>

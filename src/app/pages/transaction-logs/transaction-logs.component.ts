@@ -1,5 +1,6 @@
-import { CommonModule, CurrencyPipe, DatePipe, TitleCasePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass, TitleCasePipe } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TransactionLog } from '../../models/transaction-log.model';
 import { User } from '../../models/user.model';
@@ -8,14 +9,16 @@ import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'br-transaction-logs',
-  imports: [CurrencyPipe, TitleCasePipe, DatePipe, RouterLink, CommonModule],
+  imports: [CurrencyPipe, TitleCasePipe, DatePipe, RouterLink, NgClass, FormsModule],
   templateUrl: './transaction-logs.component.html',
   styleUrl: './transaction-logs.component.scss'
 })
 export class TransactionLogsComponent {
   listOfUsers: { [key: string]: User } | undefined;
   transactionLogs: TransactionLog[] = [];
+  filteredLogs: TransactionLog[] = [];
   currentUser: User | undefined;
+  searchText: string = "";
 
   constructor(private route: ActivatedRoute, private transactionLogsService: TransactionLogsService, private userService: UserService) {
     const accountId = this.route?.snapshot.paramMap.get("id");
@@ -53,10 +56,26 @@ export class TransactionLogsComponent {
               }
             }
           });
+        this.filteredLogs = [...this.transactionLogs];
       } else {
         console.log("No data available");
       }
     });
   }
 
+  onSearch() {
+    if (!this.searchText) {
+      this.filteredLogs = [...this.transactionLogs];
+      return;
+    }
+
+    this.filteredLogs = this.transactionLogs.filter((log) => {
+      const fromAccount: string[] = Object.values(log.from);
+      const toAccount: string[] = Object.values(log.to);
+
+      const searchText = this.searchText.toLowerCase();
+
+      return fromAccount.some(name => name.toLowerCase().includes(searchText)) || toAccount.some(name => name.toLowerCase().includes(searchText));
+    })
+  }
 }

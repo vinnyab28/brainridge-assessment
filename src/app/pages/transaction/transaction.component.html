@@ -1,4 +1,4 @@
-<div class="card mt-5">
+<div class="card mt-5 col-6 mx-auto">
     <div class="card-header d-flex gap-3 align-items-center">
         <a href="#" [routerLink]="['/dashboard']"><i class="bi bi-chevron-left fs-2 fw-bold"></i></a>
         <h1>Transfer Funds</h1>
@@ -34,10 +34,14 @@
                     }
                 </div>
                 <div class="w-100">
+
                     <label for="amount" class="form-label required fw-bold">Amount</label>
-                    <input type="number" formControlName="amount" class="form-control" id="amount"
-                        [ngClass]="transferForm.controls['amount'].dirty ? ((transferForm.controls['amount'].invalid || transferForm.hasError('insufficientFunds')) ? 'is-invalid' : 'is-valid') : ''"
-                        placeholder="Enter Amount" required min="1">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
+                        <input type="number" formControlName="amount" class="form-control" id="amount"
+                            [ngClass]="transferForm.controls['amount'].dirty ? ((transferForm.controls['amount'].invalid || transferForm.hasError('insufficientFunds')) ? 'is-invalid' : 'is-valid') : ''"
+                            placeholder="Enter Amount" required min="1">
+                    </div>
                     @if(transferForm.controls['amount'].hasError('required')) {
                     <div class="invalid-feedback">Amount cannot be empty</div>
                     }
@@ -69,7 +73,15 @@
             <button type="button" class="btn btn-outline-secondary border-0 px-5" [routerLink]="['/dashboard']">
                 Cancel
             </button>
-            <button type="submit" class="btn btn-primary px-5" [disabled]="transferForm.invalid">Transfer</button>
+            <button type="submit" class="btn btn-primary px-5"
+                [disabled]="transferForm.invalid || isTransactionPending">
+                @if(isTransactionPending){
+                <span class="spinner-border spinner-border-sm me-1" aria-hidden="true"></span>
+                <span role="status">Transfering...</span>
+                } @else {
+                <span>Transfer</span>
+                }
+            </button>
         </div>
     </form>
 </div>

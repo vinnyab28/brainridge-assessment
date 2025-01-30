@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { v4 as uuidv4 } from "uuid";
 import { User } from '../../models/user.model';
+import { ToastService } from '../../services/toast.service';
 import { TransactionLogsService } from '../../services/transaction-logs.service';
 import { TransactionService } from '../../services/transaction.service';
 import { UserService } from '../../services/user.service';
@@ -19,7 +20,9 @@ export class TransactionComponent implements OnInit {
   @Input() userData!: User;
   transferForm: FormGroup;
   isSubmitted: boolean;
+  isTransactionPending: boolean = false;
   listOfUsers: User[] = [];
+  toastService: ToastService = inject(ToastService);
 
   constructor(private router: Router, private userService: UserService, private transactionService: TransactionService, private transactionLogsService: TransactionLogsService) {
     this.isSubmitted = false;
@@ -48,8 +51,6 @@ export class TransactionComponent implements OnInit {
     this.userService.getAllUsers().then((snapshot) => {
       if (snapshot.exists()) {
         this.listOfUsers = Object.values<User>(snapshot.val());
-      } else {
-        console.log("No data available");
       }
     });
   }
@@ -57,36 +58,44 @@ export class TransactionComponent implements OnInit {
   onTransferFunds() {
     if (this.transferForm.valid) {
       this.isSubmitted = true;
-      const formData = this.transferForm.value;
+      this.isTransactionPending = true;
+      setTimeout(() => this.transferFunds(), 3000);
+    }
+  }
 
-      this.transactionService.transferFunds({
-        amount: formData.amount,
+  private transferFunds() {
+    const formData = this.transferForm.value;
+    this.transactionService.transferFunds({
+      amount: formData.amount,
+      from: {
+        accountId: formData.fromAccount
+      },
+      to: {
+        accountId: formData.toAccount
+      }
+    }).then(() => {
+      const transactionLog = {
+        transactionId: uuidv4(),
+        description: this.transferForm.get('description')?.value,
+        amount: this.transferForm.get('amount')?.value,
+        timestamp: new Date().toISOString(),
         from: {
           accountId: formData.fromAccount
         },
         to: {
           accountId: formData.toAccount
         }
-      }).then((updatedAccountDetails) => {
-        const transactionLog = {
-          transactionId: uuidv4(),
-          description: this.transferForm.get('description')?.value,
-          amount: this.transferForm.get('amount')?.value,
-          timestamp: new Date().toISOString(),
-          from: {
-            accountId: formData.fromAccount
-          },
-          to: {
-            accountId: formData.toAccount
-          }
-        }
-        this.transactionLogsService.insertTransactionLog(transactionLog);
-      }).then(() => {
-        this.router.navigate(['/dashboard']);
-      }).catch((error) => {
-        console.error('Transfer failed:', error.message);
-      });
-    }
+      };
+      this.transactionLogsService.insertTransactionLog(transactionLog);
+      this.isTransactionPending = false;
+    }).then(() => {
+      this.toastService.showSuccessToast("Transferred successfully");
+      this.isTransactionPending = false;
+      this.router.navigate(['/dashboard']);
+    }).catch((error) => {
+      this.isTransactionPending = false;
+      this.toastService.showDangerToast('Transfer failed: ' + error.message);
+    });
   }
 
   private sameAccountSelectedValidator(): ValidatorFn {
