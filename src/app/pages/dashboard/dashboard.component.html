@@ -6,28 +6,29 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>ID</th>
         <th>First Name</th>
         <th>Last Name</th>
-        <th class="text-center"># of Accounts</th>
+        <th class="text-center">Total Amount</th>
         <th class="text-center">Action</th>
       </tr>
     </thead>
     <tbody>
       @if(!userData.length){
       <tr class="py-5 text-center">
-        <td colspan="5" class="py-5">No user data available</td>
+        <td colspan="4" class="py-5">No user data available</td>
       </tr>
-      }
-      @for(user of userData; track user.id; let i = $index) {
+      } @else {
+      @for(user of userData; track user.userId; let i = $index) {
       <tr>
-        <td>{{ user.id }}</td>
         <td>{{ user.firstName }}</td>
         <td>{{ user.lastName }}</td>
-        <td class="text-center">{{ user.noOfAccounts }}</td>
+        <td class="text-center fw-bold">{{ ((user.accountDetails.chequing?.balance ?? 0) +
+          (user.accountDetails.savings?.balance
+          ?? 0)) | currency }}</td>
         <td class="text-center"><button class="btn btn-primary btn-sm px-3"
-            (click)="onViewUserDetails(user.id)">View</button></td>
+            (click)="onViewUserDetails(user.userId!)">View</button></td>
       </tr>
+      }
       }
     </tbody>
   </table>

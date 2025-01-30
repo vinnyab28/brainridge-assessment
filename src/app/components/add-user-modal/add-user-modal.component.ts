@@ -4,6 +4,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { ACCOUNT_TYPE } from '../../enums/account-type';
+import { User } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -31,8 +32,50 @@ export class AddUserComponent {
   onCreateUser() {
     this.formSubmitted = true;
     if (this.userForm.valid) {
-      const data = { ...this.userForm.value, id: uuidv4() };
-      this.userService.addUser(data);
+      const userId = uuidv4();
+
+      let formData: User = {
+        userId,
+        firstName: this.userForm.value.firstName,
+        lastName: this.userForm.value.lastName,
+        accountDetails: {}
+      }
+
+      if (this.userForm.value.accountType === ACCOUNT_TYPE.CHEQUING) {
+        formData = {
+          ...formData,
+          accountDetails: {
+            chequing: {
+              accountId: uuidv4(),
+              balance: this.userForm.value.balance,
+              lastUpdated: new Date()
+            },
+            savings: {
+              accountId: uuidv4(),
+              balance: 0,
+              lastUpdated: new Date()
+            },
+          }
+        }
+      } else {
+        formData = {
+          ...formData,
+          accountDetails: {
+            savings: {
+              accountId: uuidv4(),
+              balance: this.userForm.value.balance,
+              lastUpdated: new Date()
+            },
+            chequing: {
+              accountId: uuidv4(),
+              balance: 0,
+              lastUpdated: new Date()
+            }
+          }
+        }
+      }
+
+      this.userService.addUser(userId, formData);
       this.activeModal.close(true);
     } else {
     }

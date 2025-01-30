@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Database, get, ref, set } from '@angular/fire/database';
 import { COLLECTIONS } from '../enums/collections';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +17,13 @@ export class UserService {
     return get(usersRef);
   }
 
-  addUser(userData: any) {
-    const usersRef = ref(this.db, COLLECTIONS.USERS + "/" + userData.id);
+  addUser(userId: string, userData: User) {
+    const usersRef = ref(this.db, COLLECTIONS.USERS + "/" + userId);
     return set(usersRef, userData);
+  }
+
+  getUser(userId: string) {
+    const usersRef = ref(this.db, `${COLLECTIONS.USERS}/${userId}`);
+    return get(usersRef);
   }
 }
