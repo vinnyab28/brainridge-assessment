@@ -1,4 +1,4 @@
-<div class="card mt-5 col-6 mx-auto">
+<div class="card mt-4 col-6 mx-auto">
     <div class="card-header d-flex gap-3 align-items-center">
         <a href="#" [routerLink]="['/dashboard']"><i class="bi bi-chevron-left fs-2 fw-bold"></i></a>
         <h1>Transfer Funds</h1>
@@ -40,28 +40,29 @@
                         <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
                         <input type="number" formControlName="amount" class="form-control" id="amount"
                             [ngClass]="transferForm.controls['amount'].dirty ? ((transferForm.controls['amount'].invalid || transferForm.hasError('insufficientFunds')) ? 'is-invalid' : 'is-valid') : ''"
-                            placeholder="Enter Amount" required min="1">
+                            [disabled]="!transferForm.controls['fromAccount'].value" placeholder="Enter Amount" required
+                            min="1">
+                        @if(transferForm.controls['amount'].hasError('required')) {
+                        <div class="invalid-feedback">Amount cannot be empty</div>
+                        }
+                        @if(transferForm.controls['amount'].hasError('min')) {
+                        <div class="invalid-feedback">Amount should be greater than 0</div>
+                        }
+                        @if(transferForm.hasError('insufficientFunds')) {
+                        <div class="invalid-feedback">Insufficient funds to transfer</div>
+                        }
                     </div>
-                    @if(transferForm.controls['amount'].hasError('required')) {
-                    <div class="invalid-feedback">Amount cannot be empty</div>
-                    }
-                    @if(transferForm.controls['amount'].hasError('min')) {
-                    <div class="invalid-feedback">Amount should be greater than 0</div>
-                    }
-                    @if(transferForm.hasError('insufficientFunds')) {
-                    <div class="invalid-feedback">Insufficient funds to transfer</div>
-                    }
                 </div>
                 <div class="w-100">
                     <label for="description" class="form-label fw-bold">Description (Optional)</label>
                     <input type="text" formControlName="description" class="form-control" id="description"
                         placeholder="Enter description">
                 </div>
-                <div class="form-check mt-3">
+                <div class="form-check mt-1">
                     <input class="form-check-input" type="checkbox" formControlName="confirmation" id="flexCheckDefault"
                         [ngClass]="isSubmitted ? (transferForm.controls['confirmation'].invalid ? 'is-invalid' : 'is-valid') : ''">
                     <label class="form-check-label required" for="flexCheckDefault">
-                        Confirm this transfer
+                        I have reviewed and confirm the provided details.
                     </label>
                     @if(transferForm.controls['confirmation'].hasError('requiredTrue')) {
                     <div class="invalid-feedback">Please check this box to continue</div>

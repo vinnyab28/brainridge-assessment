@@ -14,11 +14,13 @@ import { UserService } from '../../services/user.service';
   styleUrl: './transaction-logs.component.scss'
 })
 export class TransactionLogsComponent {
+  isFetchingLogs: boolean = false;
   listOfUsers: { [key: string]: User } | undefined;
   transactionLogs: TransactionLog[] = [];
   filteredLogs: TransactionLog[] = [];
   currentUser: User | undefined;
   searchText: string = "";
+  NO_OF_PLACEHOLDER_ROWS: number[] = Array(5).fill(0);
 
   constructor(private route: ActivatedRoute, private transactionLogsService: TransactionLogsService, private userService: UserService) {
     const accountId = this.route?.snapshot.paramMap.get("id");
@@ -27,7 +29,10 @@ export class TransactionLogsComponent {
         if (users.exists()) {
           this.listOfUsers = users.val();
           this.currentUser = this.listOfUsers && this.listOfUsers[accountId];
-          this.getAllTransactionLogs(accountId);
+          this.isFetchingLogs = true;
+          setTimeout(() => {
+            this.getAllTransactionLogs(accountId);
+          }, 3000)
         }
       });
     }
@@ -57,9 +62,13 @@ export class TransactionLogsComponent {
             }
           });
         this.filteredLogs = [...this.transactionLogs];
+        this.isFetchingLogs = false;
       } else {
+        this.isFetchingLogs = false;
         console.log("No data available");
       }
+    }).catch(err => {
+      this.isFetchingLogs = false;
     });
   }
 

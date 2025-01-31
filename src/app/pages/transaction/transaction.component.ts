@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { Observable } from 'rxjs';
 import { v4 as uuidv4 } from "uuid";
+import { CanComponentDeactivate } from '../../guards/user-form.guard';
 import { User } from '../../models/user.model';
 import { ToastService } from '../../services/toast.service';
 import { TransactionLogsService } from '../../services/transaction-logs.service';
@@ -15,9 +17,8 @@ import { UserService } from '../../services/user.service';
   templateUrl: './transaction.component.html',
   styleUrl: './transaction.component.scss'
 })
-export class TransactionComponent implements OnInit {
+export class TransactionComponent implements OnInit, CanComponentDeactivate {
   accountId: string | undefined | null = null;
-  @Input() userData!: User;
   transferForm: FormGroup;
   isSubmitted: boolean;
   isTransactionPending: boolean = false;
@@ -38,7 +39,7 @@ export class TransactionComponent implements OnInit {
     });
 
     this.transferForm.get('fromAccount')?.valueChanges.subscribe((value) => {
-      this.transferForm.addValidators([this.insufficientFundsValidator()]);
+      this.transferForm.setValidators([Validators.required, Validators.min(1), this.insufficientFundsValidator()]);
       this.transferForm.updateValueAndValidity();
     })
   }
@@ -117,4 +118,8 @@ export class TransactionComponent implements OnInit {
       return fromAccount && (amount > fromAccount?.balance!) ? { insufficientFunds: true } : null;
     }
   }
+
+  deactive(): Observable<boolean> | Promise<boolean> | boolean {
+    return !this.transferForm.dirty || this.isSubmitted;
+  };
 }

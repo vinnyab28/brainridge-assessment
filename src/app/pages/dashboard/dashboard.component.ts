@@ -29,6 +29,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   fetchingUsers: boolean = true;
   private toastService: ToastService = inject(ToastService);
   searchText: string = "";
+  NO_OF_PLACEHOLDER_ROWS: number[] = Array(5).fill(0);
 
   constructor(private userService: UserService) { }
 

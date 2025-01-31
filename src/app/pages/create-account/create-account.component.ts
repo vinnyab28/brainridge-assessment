@@ -2,8 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { Observable } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { ACCOUNT_TYPE } from '../../enums/account-type';
+import { CanComponentDeactivate } from '../../guards/user-form.guard';
 import { User } from '../../models/user.model';
 import { ToastService } from '../../services/toast.service';
 import { UserService } from '../../services/user.service';
@@ -14,7 +16,7 @@ import { UserService } from '../../services/user.service';
   templateUrl: './create-account.component.html',
   styleUrl: './create-account.component.scss',
 })
-export class CreateAccountComponent {
+export class CreateAccountComponent implements CanComponentDeactivate {
   userForm: FormGroup;
   accountTypes = ACCOUNT_TYPE;
   formSubmitted: boolean;
@@ -62,4 +64,8 @@ export class CreateAccountComponent {
       this.isCreatingAccount = false;
     });
   }
+
+  deactive(): Observable<boolean> | Promise<boolean> | boolean {
+    return !this.userForm.dirty || this.formSubmitted;
+  };
 }

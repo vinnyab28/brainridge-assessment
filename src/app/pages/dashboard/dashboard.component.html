@@ -1,86 +1,61 @@
-<div class="d-flex justify-content-between py-4 gap-3 align-items-center">
-  <h1 class="me-auto">Dashboard</h1>
-  <button class="btn btn-primary" [routerLink]="['/transaction']" [disabled]="!listOfUsers.length">Transfer
-    Funds</button>
-  <button class="btn btn-primary" [routerLink]="['/create-account']">Add User</button>
-</div>
-<div class="search-wrapper col-4 ms-auto mb-3">
-  <div class="input-group">
-    <span class="input-group-text"><i class="bi bi-search"></i></span>
-    <input type="text" class="form-control" [(ngModel)]="searchText" (ngModelChange)="onSearch()"
-      placeholder="Search Users" aria-label="Search Users">
+<div class="container h-100">
+  <div class="d-flex justify-content-between py-4 gap-3 align-items-center">
+    <h1 class="me-auto mb-0">Dashboard</h1>
+    <button class="btn btn-primary btn-lg" [routerLink]="['/transaction']" [disabled]="!listOfUsers.length">Transfer
+      Funds</button>
+    <button class="btn btn-primary btn-lg" [routerLink]="['/create-account']">Add User</button>
+  </div>
+  <div class="search-wrapper col-4 ms-auto mb-3">
+    <div class="input-group">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" class="form-control" [(ngModel)]="searchText" (ngModelChange)="onSearch()"
+        placeholder="Search Users" aria-label="Search Users">
+    </div>
+  </div>
+  <div class="table-wrapper">
+    <table class="table table-hover mb-0">
+      <thead>
+        <tr>
+          <th class="text-center">S.No</th>
+          <th class="">First Name</th>
+          <th class="">Last Name</th>
+          <th class="text-center">Account Type</th>
+          <th class="text-center">Balance</th>
+          <th class="text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider ">
+        @if (fetchingUsers) {
+        @for(count of NO_OF_PLACEHOLDER_ROWS; track count;) {
+        <tr class="text-center">
+          <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
+          <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
+          <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
+          <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
+          <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
+          <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
+        </tr>
+        }
+        }
+        @if(!filteredUsers.length && !this.fetchingUsers){
+        <tr class="py-5 text-center">
+          <td colspan="6" class="py-5">No user data available</td>
+        </tr>
+        } @else {
+        @for(user of filteredUsers; track user.accountId; let i = $index) {
+        <tr class="align-middle">
+          <td class="text-center">{{i + 1}}</td>
+          <td>{{ user.firstName }}</td>
+          <td>{{ user.lastName }}</td>
+          <td class="text-center">{{accountType[user.accountType] | titlecase }}</td>
+          <td class="text-center fw-bold">{{ user.balance| currency }}</td>
+          <td class="text-center"><button class="btn btn-outline-primary"
+              [routerLink]="['/transaction-logs', user.accountId]">View
+              Logs</button></td>
+        </tr>
+        }
+        }
+      </tbody>
+    </table>
   </div>
 </div>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th class="text-center">S.No</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th class="text-center">Account Type</th>
-      <th class="text-center">Balance</th>
-      <th class="text-center">Action</th>
-    </tr>
-  </thead>
-  <tbody class="table-group-divider">
-    @if (fetchingUsers) {
-    <tr class="text-center">
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-    </tr>
-    <tr class="text-center">
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-    </tr>
-    <tr class="text-center">
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-    </tr>
-    <tr class="text-center">
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-    </tr>
-    <tr class="text-center">
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-      <td class=" placeholder-wave"><span class="placeholder w-100"></span></td>
-    </tr>
-    }
-    @if(!filteredUsers.length && !this.fetchingUsers){
-    <tr class="py-5 text-center">
-      <td colspan="6" class="py-5">No user data available</td>
-    </tr>
-    } @else {
-    @for(user of filteredUsers; track user.accountId; let i = $index) {
-    <tr class="align-middle">
-      <td class="text-center">{{i + 1}}</td>
-      <td>{{ user.firstName }}</td>
-      <td>{{ user.lastName }}</td>
-      <td class="text-center">{{accountType[user.accountType] | titlecase }}</td>
-      <td class="text-center fw-bold">{{ user.balance| currency }}</td>
-      <td class="text-center"><button class="btn btn-primary" [routerLink]="['/transaction-logs', user.accountId]">View
-          Logs</button></td>
-    </tr>
-    }
-    }
-  </tbody>
-</table>
