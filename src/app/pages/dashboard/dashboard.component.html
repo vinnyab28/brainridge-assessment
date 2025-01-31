@@ -1,9 +1,10 @@
 <div class="container h-100">
   <div class="d-flex justify-content-between py-4 gap-3 align-items-center">
     <h1 class="me-auto mb-0">Dashboard</h1>
-    <button class="btn btn-primary btn-lg" [routerLink]="['/transaction']" [disabled]="!listOfUsers.length">Transfer
+    <button class="btn btn-primary btn-md px-4" [routerLink]="['/transaction']"
+      [disabled]="!listOfUsers.length">Transfer
       Funds</button>
-    <button class="btn btn-primary btn-lg" [routerLink]="['/create-account']">Add User</button>
+    <button class="btn btn-primary btn-md px-4" [routerLink]="['/create-account']">Add User</button>
   </div>
   <div class="search-wrapper col-4 ms-auto mb-3">
     <div class="input-group">
@@ -49,7 +50,7 @@
           <td>{{ user.lastName }}</td>
           <td class="text-center">{{accountType[user.accountType] | titlecase }}</td>
           <td class="text-center fw-bold">{{ user.balance| currency }}</td>
-          <td class="text-center"><button class="btn btn-outline-primary"
+          <td class="text-center"><button class="btn btn-sm btn-outline-primary"
               [routerLink]="['/transaction-logs', user.accountId]">View
               Logs</button></td>
         </tr>

@@ -19,6 +19,9 @@ $primary: #fd6262;
   .table-group-divider {
     @extend .border-primary;
   }
+  table > tbody > tr > td {
+    @extend .py-3;
+  }
 }
 
 .placeholder {
