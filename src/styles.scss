@@ -1,17 +1,15 @@
-/* You can add global styles to this file, and also import other style files */
-@import "styles/brain-ridge";
-
 html,
 body {
   height: 100%;
-  min-height: 100%;
+  margin: 0;
 }
 
 body {
   background: url(https://static.wixstatic.com/media/c837a6_d11c6c437c0f4feb9de8591b42ead168~mv2.jpg/v1/fill/w_3508,h_1790,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/c837a6_d11c6c437c0f4feb9de8591b42ead168~mv2.jpg);
   background-position: center bottom;
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 label.required::after {
@@ -19,3 +17,6 @@ label.required::after {
   color: red;
   margin-left: 2px;
 }
+
+/* You can add global styles to this file, and also import other style files */
+@import "styles/brain-ridge";
