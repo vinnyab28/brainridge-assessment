@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const envFilePath = path.join(__dirname, 'src/environments/environment.prod.ts');
+const envFilePath = path.join(__dirname, 'src/environments/environment.ts');
 
 const apiKey = process.env.FIREBASE_API_KEY;
 const authDomain = process.env.FIREBASE_AUTH_DOMAIN;
